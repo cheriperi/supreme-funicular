@@ -10,3 +10,9 @@ Read the temperature value pulished and operates a led depending on the tmp valu
 
 ## humSub:
 Read the humidity value pulished and operates a led depending on the humidity value.
+
+## dhtPub and dhtSub:
+Read an operates a lead depending on the ldr value.
+
+## startApp.sh
+Execute the module asked or all of them. use it "./startApp.sh <module>"

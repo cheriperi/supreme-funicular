@@ -5,7 +5,6 @@ from tkinter import messagebox
 import paho.mqtt.client as mqtt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
 from matplotlib.figure import Figure
-import string
 
 
 def publish_on(topic):
@@ -14,7 +13,6 @@ def publish_on(topic):
 
 def publish_off(topic):
     client.publish("/etsidi/" + topic, "off", 0, True)
-
 
 
 def on_connect(client, userdata, flags, rc):
@@ -30,7 +28,7 @@ def on_message(client, userdata, message):
     if message.topic == "/etsidi/tmpH":
         plot_msg(message, ax2, canvas2, (-10, 50))
     if message.topic == "/etsidi/ldrH":
-        plot_msg(message, ax3, canvas3, (0, 15000))
+        plot_msg(message, ax3, canvas3, (0, 16000))
 
 
 def plot_msg(message, axis, canvas, limits):

@@ -15,6 +15,13 @@ def publish_off(topic):
     client.publish("/etsidi/" + topic, "off", 0, True)
 
 
+def pub_callbacks():
+    ac1.pub_callback()
+    ac2.pub_callback()
+    ac3.pub_callback()
+    ac4.pub_callback()
+
+
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code" + str(rc))
     client.subscribe("/etsidi/humH")
@@ -75,6 +82,7 @@ class Actuator:
         # On and off functions
         self.fun_on = fun_on
         self.fun_off = fun_off
+        self.status = "off"
 
         # Actuator 1 text frame
         self.frame_text = Frame(actuators, borderwidth=1, relief=SUNKEN)
@@ -106,12 +114,20 @@ class Actuator:
     def button_on(self):
         self.status_label.config(bg='green')
         self.status_label.config(text='active')
+        self.status = "on"
         self.fun_on(self.topic)
 
     def button_off(self):
         self.status_label.config(bg='red')
         self.status_label.config(text='inactive')
+        self.status = "off"
         self.fun_off(self.topic)
+
+    def pub_callback(self):
+        if self.status == "on":
+            self.fun_on(self.topic)
+        else:
+            self.fun_off(self.topic)
 
 
 # Set up Mosquitto client
@@ -226,10 +242,10 @@ for i in range(5):
     actuators.rowconfigure(i, weight=1)
 
 # Actuators
-Actuator(1, "Water pump", "water", publish_on, publish_off)
-Actuator(2, "Fan", "fan", publish_on, publish_off)
-Actuator(3, "Cover", "cover", publish_on, publish_off)
-Actuator(4, "Lights", "lights", publish_on, publish_off)
+ac1 = Actuator(1, "Water pump", "water", publish_on, publish_off)
+ac2 = Actuator(2, "Fan", "fan", publish_on, publish_off)
+ac3 = Actuator(3, "Cover", "cover", publish_on, publish_off)
+ac4 = Actuator(4, "Lights", "lights", publish_on, publish_off)
 
 
 # Main loop
@@ -241,6 +257,7 @@ while f_loop:
     c += 1
     if c >= 10000:
         c = 0
+        pub_callbacks()
         client.loop()
 
     root.update()

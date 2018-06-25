@@ -3,10 +3,18 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 import paho.mqtt.client as mqtt
-import matplotlib.pyplot as ptl
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
 from matplotlib.figure import Figure
-import time
+import string
+
+
+def publish_on(topic):
+    client.publish("/etsidi/" + topic, "on", 0, True)
+
+
+def publish_off(topic):
+    client.publish("/etsidi/" + topic, "off", 0, True)
+
 
 
 def on_connect(client, userdata, flags, rc):
@@ -26,6 +34,7 @@ def on_message(client, userdata, message):
 
 
 def plot_msg(message, axis, canvas, limits):
+
     # Read data
     data = str(message.payload.decode("utf-8"))
     print(message.topic, data)
@@ -51,7 +60,6 @@ def plot_msg(message, axis, canvas, limits):
 
     # Display canvas
     canvas.show()
-    #canvas.get_tk_widget().pack()
 
 
 def on_window_close():
@@ -59,6 +67,53 @@ def on_window_close():
         root.destroy()
         global f_loop
         f_loop = False
+
+
+class Actuator:
+
+    def __init__(self, row, name, topic, fun_on, fun_off):
+
+        self.topic = topic
+        # On and off functions
+        self.fun_on = fun_on
+        self.fun_off = fun_off
+
+        # Actuator 1 text frame
+        self.frame_text = Frame(actuators, borderwidth=1, relief=SUNKEN)
+        self.frame_text.grid(column=1, row=row, rowspan=1, sticky=N + E + W + S)
+        self.frame_text.rowconfigure(1, weight=1)
+        self.frame_text.columnconfigure(1, weight=1)
+        self.frame_text.columnconfigure(2, weight=1)
+        # Actuator 1 text
+        self.name_label = Label(self.frame_text, text=name, justify=LEFT)
+        self.name_label.configure(font=("Arial", 12))
+        self.name_label.grid(column=1, row=1, sticky=N+S+W, padx=2, pady=2)
+        # Actuator 1 status
+        self.status_label = Label(self.frame_text, text='inactive', justify=LEFT, bg="red")
+        self.status_label.configure(font=("Arial", 12))
+        self.status_label.grid(column=2, row=1, sticky=N+S+E, padx=2, pady=2)
+
+        # Actuator 1 button frame
+        self.frame_buttons = Frame(actuators, borderwidth=1, relief=SUNKEN)
+        self.frame_buttons.grid(column=2, row=row, rowspan=1, sticky=N + E + W + S)
+        self.frame_buttons.columnconfigure(1, weight=1)
+        self.frame_buttons.columnconfigure(2, weight=1)
+        # Actuator 1 start button
+        self.button_on = Button(self.frame_buttons, text='Start', command=self.button_on)
+        self.button_on.grid(column=1, row=1, sticky=W, padx=2, pady=2)
+        # Actuator 1 stop button
+        self.button_off = Button(self.frame_buttons, text='Stop', command=self.button_off)
+        self.button_off.grid(column=2, row=1, sticky=E, padx=2, pady=2)
+
+    def button_on(self):
+        self.status_label.config(bg='green')
+        self.status_label.config(text='active')
+        self.fun_on(self.topic)
+
+    def button_off(self):
+        self.status_label.config(bg='red')
+        self.status_label.config(text='inactive')
+        self.fun_off(self.topic)
 
 
 # Set up Mosquitto client
@@ -70,8 +125,8 @@ client.connect("iot.eclipse.org", 1883, 60)
 # Set up tkinter interface window
 root = tk.Tk()
 root.title("marvinApp")
-w = 800
-h = 550
+w = 500
+h = 500
 root.minsize(w, h)
 root.protocol("WM_DELETE_WINDOW", on_window_close)
 
@@ -144,20 +199,52 @@ cap3 = tk.Label(fig3_frame, text='Nivel de luz', pady=5)
 cap3.grid(column=1, row=2, sticky=N, padx=10, pady=5)
 
 
-# Frame 1: top bar
-top_bar = Frame(mainframe, borderwidth=1, relief=SUNKEN)
-top_bar.grid(column=2, row=1, rowspan=1, sticky=N+E+W)
+# Info frame
+info_frame = Frame(mainframe, borderwidth=1, relief=SUNKEN)
+info_frame.grid(column=2, row=1, rowspan=1, sticky=N+E+W+S)
+info_frame.columnconfigure(1, weight=1)
+# info_frame.rowconfigure(2, weight=1)
 
-# Frame 1.1: title
+# Top bar frame
+top_bar = Frame(info_frame, borderwidth=1, relief=SUNKEN)
+top_bar.grid(column=1, row=1, rowspan=1, sticky=N+E+W)
+
+# Top bar: title
 text1 = Label(top_bar, text='Supreme Funicular', justify=LEFT)
 text1.configure(font=("Arial", 30))
 text1.grid(column=1, row=1, sticky=N+W, padx=10, pady=4)
 
+# Top bar: by
+text1 = Label(top_bar, text='by cheriperi and juakofz', justify=LEFT)
+text1.configure(font=("Arial", 12))
+text1.grid(column=1, row=2, sticky=N+W, padx=10, pady=2)
+
+
+# Actuators frame
+actuators = Frame(info_frame)
+actuators.grid(column=1, row=2, rowspan=1, sticky=N+S+E+W)
+actuators.columnconfigure(1, weight=1)
+for i in range(5):
+    actuators.rowconfigure(i, weight=1)
+
+# Actuators
+Actuator(1, "Water pump", "water", publish_on, publish_off)
+Actuator(2, "Fan", "fan", publish_on, publish_off)
+Actuator(3, "Cover", "cover", publish_on, publish_off)
+Actuator(4, "Lights", "lights", publish_on, publish_off)
+
+
 # Main loop
+c = 0
 f_loop = True
 while f_loop:
-    print("looping")
-    client.loop()
+
+    # Client loop is too slow
+    c += 1
+    if c >= 10000:
+        c = 0
+        client.loop()
+
     root.update()
 
 

@@ -8,11 +8,11 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolb
 from matplotlib.figure import Figure
 
 last_hum = []
-max_hum = 20
-min_hum = 10
+max_hum = 60
+min_hum = 30
 
 last_tmp = []
-max_tmp = 35
+max_tmp = 30
 min_tmp = 15
 
 last_ldr = []
@@ -252,7 +252,7 @@ client.connect("iot.eclipse.org", 1883, 60)
 
 # Set up tkinter interface window
 root = tk.Tk()
-root.title("marvinApp")
+root.title("Supreme Funicular")
 w = 500
 h = 500
 root.minsize(w, h)
@@ -392,7 +392,7 @@ while f_loop:
 
     # Client loop is too slow
     c += 1
-    if c >= 10000:
+    if c >= 5000:
         c = 0
         pub_callbacks()
         client.loop()

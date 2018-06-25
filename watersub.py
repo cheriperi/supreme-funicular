@@ -1,5 +1,5 @@
 import paho.mqtt.client as mqtt
-# import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 
 
 def on_connect(client1, userdata, flags, rc):
@@ -10,17 +10,17 @@ def on_connect(client1, userdata, flags, rc):
 
 def on_message(client1, userdata, message):
     print("message received ", str(message.payload.decode("utf-8")))
-    if message.payload == "on":
-        # GPIO.output(LEDPIN, True)
+    if str(message.payload.decode("utf-8")) == "on":
+        GPIO.output(LEDPIN, True)
         pass
     else:
-        # GPIO.output(LEDPIN, False)
+        GPIO.output(LEDPIN, False)
         pass
 
-# LEDPIN = 22
+LEDPIN = 19
 #
-# GPIO.setmode(GPIO.BCM)
-# GPIO.setup(LEDPIN, GPIO.OUT)
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(LEDPIN, GPIO.OUT)
 
 client = mqtt.Client()
 client.on_connect = on_connect

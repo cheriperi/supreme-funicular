@@ -1,18 +1,18 @@
 # supreme-funicular
 
-Internet of things application: Greenhouse.
+Aplicación de Internet de las cosas: Invernadero
 
-## dhtPub:
-Read the temperature and humidity values and publishes them
+## Interfaces con los sensores y actuadores
+Programas en python que publican los datos de los sensores y controlan los actuadores.
 
-## tmpSub:
-Read the temperature value pulished and operates a led depending on the tmp value.
+#### dhtPub, ldrPub
+Publican los datos de temperatura, humedad (dht11) y luminosidad (ldr), junto con un histórico de los últimos N datos. Cada uno es publicado en un tópico utilizando mosquitto. Los tópicos son /etsidi/tmp y etsidi/tmpH para la termperatura, /etsidi/hum y etsidi/humH para la humedad y /etsidi/ldr y etsidi/tldrH para la luminosidad.
 
-## humSub:
-Read the humidity value pulished and operates a led depending on the humidity value.
+#### ldrSub, tmpSub, humSub
+Estos programas están suscritos a los datos publicados por los sensores y por la interfaz con el usuario. Cada uno se suscribe a su respectivo topic de dato y al topic de /etsidi/params, que publica la información sobre los márgenes aceptables de cada magnitud.
 
-## dhtPub and dhtSub:
-Read an operates a lead depending on the ldr value.
+## Interfaz con el usuario
 
-## startApp.sh
-Execute the module asked or all of them. use it "./startApp.sh <module>"
+## Script de lanzamiento startApp.sh
+Ejecuta un módulo o todos juntos. Lanza cada programa en una terminal individual. Para lanzarlo: "./startApp.sh <module>"
+donde módulo es ldr, tmp, hum o all (para toda la aplicación).

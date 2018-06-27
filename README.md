@@ -26,5 +26,5 @@ La interfaz está creada en python con ayuda de las librerías *tkinter* y *matp
 Ejecuta un módulo o todos juntos. Lanza cada programa en una terminal individual. Para lanzarlo: `./startApp.sh <module>`
 donde módulo es ldr, tmp, hum o all (para toda la aplicación).
 
-## carriots
+## Carriots
 El programa carriots.py envía a la página web de carriots un mensaje cuando se considera que la luz pasa de *on* a *off*. En la herramienta, hay un *listener*, que envía un correo cuando se recibe este dato.

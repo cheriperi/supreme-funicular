@@ -2,6 +2,8 @@
 
 Aplicación de Internet de las cosas: **Invernadero**
 
+**Joaquín Fernández y Mercedes Alonso**
+
 ## Interfaces con los sensores y actuadores
 Programas en python que publican los datos de los sensores y controlan los actuadores.
 

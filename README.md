@@ -17,6 +17,8 @@ Estos programas están suscritos a los datos publicados por los sensores y por l
 Permite accionar los actuadores directamente desde la interfaz. Están suscritos a los tópicos de */etsidi/water*, */etsidi/light*, */etsidi/cover* y */etsidi/fan* respectivamente. Cuando por el tópico se publica un **on** se activa el actuador, y cuando se recibe un **off** se apaga.
 
 ## Interfaz con el usuario
+La interfaz está suscrita a los topics de históricos de todos los sensores (acabados en "H"). Utiliza los datos para representar gráficas de los datos en tiempo real de los sensores. Es capaz de publicar órdenes directas a los sensores a través de sus topics correspondientes. Además, se pueden cambiar los parámetros de funcionamiento para mantener las variables del sistema entre valores determinados.
+
 
 ## Script de lanzamiento startApp.sh
 Ejecuta un módulo o todos juntos. Lanza cada programa en una terminal individual. Para lanzarlo: `./startApp.sh <module>`

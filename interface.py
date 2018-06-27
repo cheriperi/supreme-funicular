@@ -243,6 +243,12 @@ class paramBox:
         self.min = int(self.min_entry.get())
 
 
+def publish_loop():
+    params = [max_hum, min_hum, max_tmp, min_tmp, max_ldr, min_ldr]
+    dataStr = "_".join(str(x) for x in params)
+    print(dataStr)
+    client.publish("/etsidi/params", dataStr, 0, True)
+
 
 # Set up Mosquitto client
 client = mqtt.Client()
@@ -401,5 +407,6 @@ while f_loop:
     max_tmp, min_tmp = p2.update(last_tmp)
     max_ldr, min_ldr = p3.update(last_ldr)
     root.update()
+    publish_loop()
 
 

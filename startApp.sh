@@ -26,6 +26,17 @@ function ldr () {
 	xterm -e 'python3 ldrSub.py' &
 }
 
+function leds () {
+	xterm -e 'python3 lightsub.py' &
+	xterm -e 'python3 coversub.py' &
+	xterm -e 'python3 fansub.py' &
+	xterm -e 'python3 watersub.py' &
+}
+
+function carriots () {
+	xterm -e 'python3 carriots.py' &
+}
+
 if [ "$#" -gt 1 ] 
 then
 	echo "invalid number of arguments"
@@ -38,6 +49,8 @@ else
 		executingDHT="true"
 		hum $executingDHT
 		ldr
+		leds
+		carriots
 	elif [ "$1" = "tmp" ]
 	then
 		echo "Executing tmp"

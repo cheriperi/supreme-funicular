@@ -17,7 +17,8 @@ client.on_connect=on_connect
 client.connect(broker_address, 1883, 60)
 client.loop_start()
 numData = 50
-dataH = [0 for i in range(0, numData)]
+dataHumH = [0 for i in range(0, numData)]
+dataTemH = [0 for i in range(0, numData)]
 
 while True:
 	result = read_dht11_dat()
@@ -25,12 +26,19 @@ while True:
 		humidity, temperature = result
 		print ("humidity: ", humidity, "%, ", "Temperature: ", temperature, " C") 
 		
-		dataH.pop(0)
-		dataH.append(humidity)
-		dataStr = "_".join(str(x) for x in dataH)
+		dataHumH.pop(0)
+		dataHumH.append(humidity)
+		dataHumHStr = "_".join(str(x) for x in dataHumH)
 		
-		print("hist data = " + dataStr)
-		client.publish("/etsidi/humH", dataStr, 0, True)
+		print("hist data hum = " + dataHumHStr)
+		client.publish("/etsidi/humH", dataHumHStr, 0, True)
+		
+		dataTemH.pop(0)
+		dataTemH.append(temperature)
+		dataTemHStr = "_".join(str(x) for x in dataTemH)
+		
+		print("hist data tmp = " + dataTemHStr)
+		client.publish("/etsidi/tmpH", dataTemHStr, 0, True)
 	
 		client.publish("/etsidi/tmp", temperature, 0, True)
 		client.publish("/etsidi/hum", humidity, 0, True)

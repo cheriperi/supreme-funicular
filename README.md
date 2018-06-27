@@ -19,6 +19,8 @@ Permite accionar los actuadores directamente desde la interfaz. Están suscritos
 ## Interfaz con el usuario
 La interfaz está suscrita a los topics de históricos de todos los sensores (acabados en "H"). Utiliza los datos para representar gráficas de los datos en tiempo real de los sensores. Es capaz de publicar órdenes directas a los sensores a través de sus topics correspondientes. Además, se pueden cambiar los parámetros de funcionamiento para mantener las variables del sistema entre valores determinados.
 
+La interfaz está creada en python con ayuda de las librerías *tkinter* y *matplotlib*.
+
 
 ## Script de lanzamiento startApp.sh
 Ejecuta un módulo o todos juntos. Lanza cada programa en una terminal individual. Para lanzarlo: `./startApp.sh <module>`
